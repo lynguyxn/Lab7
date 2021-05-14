@@ -2,8 +2,7 @@
 
 export const router = {};
 const body = document.querySelector("body");
-const title = document.querySelector("header > h1");
-const settingsIcon = document.querySelector("header > img");
+const title = document.querySelector("header h1");
 
 /**
  * Changes the "page" (state) that your SPA app is currently set to
@@ -70,19 +69,3 @@ router.setState = function(newState, pop) {
     }
     
 }
-
-window.addEventListener('popstate', (e) => {
-  if (history.state !== null) {
-    router.setState(history.state, true);
-  } else {
-    router.setState({ page: "home" }, true);
-  }
-});
-
-title.addEventListener('click', () => {
-  router.setState({ page: "home" }, false);
-});
-
-settingsIcon.addEventListener('click', () => {
-  router.setState({ page: "settings" }, false);
-});
