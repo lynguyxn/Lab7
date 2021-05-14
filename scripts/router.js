@@ -1,11 +1,14 @@
 // router.js
 
 export const router = {};
+const body = document.querySelector("body");
+const title = document.querySelector("header > h1");
+const settingsIcon = document.querySelector("header > img");
 
 /**
  * Changes the "page" (state) that your SPA app is currently set to
  */
-router.setState = function() {
+router.setState = function(newState, pop) {
   /**
    * - There are three states that your SPA app will have
    *    1. The home page
@@ -35,4 +38,51 @@ router.setState = function() {
    *    1. You may add as many helper functions in this file as you like
    *    2. You may modify the parameters of setState() as much as you like
    */
+    body.classList.remove("settings");  
+    body.classList.remove("single-entry");  
+
+    const sameState = history.state && history.state.page === newState.page;
+    if (newState.page === "home") {
+      title.innerHTML = "Journal Entries";
+      if (!pop && !sameState) {
+        history.pushState(newState, "", "/");
+      }
+    }
+    else if (newState.page === "settings") {
+      body.classList.add("settings");
+      title.innerHTML = "Settings";
+      if (!pop && !sameState) {
+        history.pushState(newState, "", "/#settings");
+      }
+    } else if (newState.page === "entry") {
+      body.classList.add("single-entry");
+      title.innerHTML = "Entry " + newState.postId;
+      // remove previous data
+      let curr = document.querySelector('entry-page');
+      curr.remove();
+      // populate new data
+      curr = document.createElement('entry-page');
+      body.appendChild(curr);
+      curr.entry = newState.entry;
+      if (!pop) {
+        history.pushState(newState, "", "/#entry" + newState.postId);
+      }
+    }
+    
 }
+
+window.addEventListener('popstate', (e) => {
+  if (history.state !== null) {
+    router.setState(history.state, true);
+  } else {
+    router.setState({ page: "home" }, true);
+  }
+});
+
+title.addEventListener('click', () => {
+  router.setState({ page: "home" }, false);
+});
+
+settingsIcon.addEventListener('click', () => {
+  router.setState({ page: "settings" }, false);
+});

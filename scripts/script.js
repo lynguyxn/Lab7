@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let newPost = document.createElement('journal-entry');
         newPost.entry = entry;
         document.querySelector('main').appendChild(newPost);
+
+        const postId = document.querySelector('main').childElementCount.toString();
+        newPost.addEventListener('click', () => {
+          setState({ page: "entry", postId, entry }, false);
+        })
       });
     });
 });
